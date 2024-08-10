@@ -62,7 +62,7 @@ mount "$ostree_sysroot" /sysroot || {
   mount "$ostree_sysroot" /sysroot || bail_out "Unable to mount $ostree_sysroot as physical sysroot"
 }
 
-ostree-prepare-root /sysroot
+ostree-prepare-root /sysroot || bail_out "OSTree prepare-root failed"
 
 log_info "Switching to rootfs"
 # shellcheck disable=SC2093
