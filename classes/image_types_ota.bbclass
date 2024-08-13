@@ -111,7 +111,9 @@ IMAGE_CMD:ota-btrfs () {
 		bbwarn "Rootfs size is too small for BTRFS. Filesystem will be extended to ${size}K"
 	fi
 	dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.btrfs seek=${size} count=0 bs=1024
-	mkfs.btrfs ${EXTRA_IMAGECMD} -r ${OTA_SYSROOT} ${IMGDEPLOYDIR}/${IMAGE_NAME}.btrfs
+	# One minor difference vs the image_types.bbclass version: we
+	# add the .ota-btrfs suffix so that it can be picked up by the wic plugin
+	mkfs.btrfs ${EXTRA_IMAGECMD} -r ${OTA_SYSROOT} ${IMGDEPLOYDIR}/${IMAGE_NAME}.ota-btrfs
 }
 do_image_ota_btrfs[depends] += "btrfs-tools-native:do_populate_sysroot"
 do_image_wic[depends] += "${@bb.utils.contains('IMAGE_FSTYPES', 'ota-btrfs', '%s:do_image_ota_btrfs' % d.getVar('PN'), '', d)}"
