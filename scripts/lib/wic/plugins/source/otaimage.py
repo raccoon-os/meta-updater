@@ -41,7 +41,7 @@ class OTAImagePlugin(RawCopyPlugin):
         if not image_dir:
             raise WicError("Couldn't find %s, exiting" % image_dir_var)
 
-        image_file = image_dir + "/" + get_bitbake_var("IMAGE_LINK_NAME") + ".ota-ext4"
+        image_file = image_dir + "/" + get_bitbake_var("IMAGE_LINK_NAME") + ".ota-btrfs"
         return image_file if os.path.exists(image_file) else ""
 
     @classmethod
