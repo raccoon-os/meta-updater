@@ -9,6 +9,8 @@ OSTREE_KERNEL = "${KERNEL_IMAGETYPE}-${INITRAMFS_IMAGE}-${MACHINE}-${KERNEL_FIT_
 UBOOT_DTB_LOADADDRESS = "0x05000000"
 UBOOT_DTBO_LOADADDRESS = "0x06000000"
 
+UBOOT_RD_LOADADDRESS = "0x07000000"
+
 # Deploy config fragment list to OSTree root fs
 IMAGE_INSTALL:append = " fit-conf"
 
@@ -16,7 +18,7 @@ DEV_MATCH_DIRECTIVE:pn-networkd-dhcp-conf = "Driver=smsc95xx lan78xx"
 IMAGE_INSTALL:append:sota = " network-configuration "
 
 PREFERRED_PROVIDER_virtual/bootloader_sota ?= "u-boot"
-UBOOT_ENTRYPOINT:sota ?= "0x00080000"
+UBOOT_ENTRYPOINT:sota ?= "0x0008000"
 
 IMAGE_FSTYPES:remove:sota = "rpi-sdimg"
 OSTREE_BOOTLOADER ?= "u-boot"
@@ -50,18 +52,21 @@ IMAGE_BOOT_FILES:sota = "${BOOTFILES_DIR_NAME}/* \
 IMAGE_BOOT_FILES:append:sota = "${@make_dtb_boot_files(d)}"
 
 # Just the overlays that will be used should be listed
+KERNEL_DEVICETREE:raspberrypi0-wifi:sota = "broadcom/bcm2708-rpi-zero-w.dtb overlays/miniuart-bt.dtbo overlays/disable-bt.dtbo"
 KERNEL_DEVICETREE:raspberrypi2:sota ?= " bcm2709-rpi-2-b.dtb "
 KERNEL_DEVICETREE:raspberrypi3:sota ?= " bcm2710-rpi-3-b.dtb overlays/vc4-kms-v3d.dtbo overlays/rpi-ft5406.dtbo"
 KERNEL_DEVICETREE:raspberrypi3-64:sota ?= " broadcom/bcm2710-rpi-3-b.dtb overlays/vc4-kms-v3d.dtbo overlays/vc4-fkms-v3d.dtbo overlays/rpi-ft5406.dtbo"
 KERNEL_DEVICETREE:raspberrypi4:sota ?= " bcm2711-rpi-4-b.dtb overlays/vc4-fkms-v3d.dtbo overlays/uart0-rpi4.dtbo"
 KERNEL_DEVICETREE:raspberrypi4-64:sota ?= " broadcom/bcm2711-rpi-4-b.dtb overlays/vc4-fkms-v3d.dtbo overlays/uart0-rpi4.dtbo"
 
+SOTA_MAIN_DTB:raspberrypi0-wifi ?= "bcm2708-rpi-zero-w.dtb"
 SOTA_MAIN_DTB:raspberrypi2 ?= "bcm2709-rpi-2-b.dtb"
 SOTA_MAIN_DTB:raspberrypi3 ?= "bcm2710-rpi-3-b.dtb"
 SOTA_MAIN_DTB:raspberrypi3-64 ?= "broadcom_bcm2710-rpi-3-b.dtb"
 SOTA_MAIN_DTB:raspberrypi4:sota ?= "bcm2711-rpi-4-b.dtb"
 SOTA_MAIN_DTB:raspberrypi4-64:sota ?= "broadcom_bcm2711-rpi-4-b.dtb"
 
+SOTA_DT_OVERLAYS:raspberrypi0-wifi ?= "miniuart-bt.dtbo disable-bt.dtbo"
 SOTA_DT_OVERLAYS:raspberrypi3 ?= "vc4-kms-v3d.dtbo rpi-ft5406.dtbo"
 SOTA_DT_OVERLAYS:raspberrypi3-64 ?= "vc4-kms-v3d.dtbo vc4-fkms-v3d.dtbo rpi-ft5406.dtbo"
 SOTA_DT_OVERLAYS:raspberrypi4 ?= "vc4-fkms-v3d.dtbo uart0-rpi4.dtbo"
